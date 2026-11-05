@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS — Operational Workspace</title>
+  <meta name="description" content="JARVIS system interface and interactive command workspace.">
+  
+  <!-- Modern Sci-Fi & Precision Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Michroma&display=swap">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="desktop">
+    <section class="jarvis-window" aria-label="JARVIS operational workspace">
+      <!-- Titlebar -->
+      <div class="titlebar">
+        <div class="window-lights" aria-hidden="true">
+          <span class="window-light bg-destructive" title="Close"></span>
+          <span class="window-light bg-warning" title="Minimize"></span>
+          <span class="window-light bg-success" title="Maximize"></span>
+        </div>
+        JARVIS
+      </div>
+
+      <!-- Main Workspace Grid -->
+      <div class="workspace-grid">
+        <!-- Left Panel: Instrument Panel & Telemetry -->
+        <section class="instrument-panel" aria-label="System interface">
+          <header>
+            <h1 class="brand">JARVIS</h1>
+          </header>
+
+          <!-- Arc Reactor Telemetry Gauge -->
+          <div class="reactor-wrap">
+            <div id="reactor" class="reactor reactor-standby" data-state="standby" aria-label="JARVIS standby">
+              <svg id="reactor-svg" viewBox="0 0 440 440" role="img" aria-label="Circular JARVIS system telemetry">
+                <!-- Outer Ticks generated dynamically via JavaScript -->
+                <g id="ticks-group"></g>
+
+                <!-- Concentric Coordinate Rings -->
+                <g class="ring-grid" stroke-width="1">
+                  <circle cx="220" cy="220" r="193"></circle>
+                  <circle cx="220" cy="220" r="184"></circle>
+                  <circle cx="220" cy="220" r="177"></circle>
+                  <circle cx="220" cy="220" r="163"></circle>
+                  <circle cx="220" cy="220" r="151"></circle>
+                  <circle cx="220" cy="220" r="139"></circle>
+                  <circle cx="220" cy="220" r="122"></circle>
+                  <circle cx="220" cy="220" r="113"></circle>
+                  <circle cx="220" cy="220" r="91"></circle>
+                  <circle cx="220" cy="220" r="75"></circle>
+                  <circle cx="220" cy="220" r="187" stroke-width="7" stroke-dasharray=".7 4"></circle>
+                  <circle cx="220" cy="220" r="169" stroke-width="4" stroke-dasharray=".7 4"></circle>
+                  <circle cx="220" cy="220" r="67" stroke-width="5" stroke-dasharray=".6 4"></circle>
+                </g>
+
+                <!-- Rotating Rotors -->
+                <g transform="rotate(-90 220 220)">
+                  <circle class="ring-cyan rotor rotor-outer" cx="220" cy="220" r="135" stroke-width="11" stroke-dasharray="205 220 153 270"></circle>
+                  <circle class="ring-cyan rotor rotor-middle" cx="220" cy="220" r="120" stroke-width="8" stroke-dasharray="188 188 123 255"></circle>
+                  <circle class="ring-blue rotor rotor-inner" cx="220" cy="220" r="103" stroke-width="16" stroke-dasharray="130 108 178 232"></circle>
+                  <circle class="ring-cyan rotor rotor-tracer" cx="220" cy="220" r="157" stroke-width="4" stroke-dasharray="100 196 3 194 55 170 4 267" opacity=".65"></circle>
+                  <circle class="ring-blue rotor rotor-core" cx="220" cy="220" r="84" stroke-width="2" stroke-dasharray="200 30 190 108"></circle>
+                </g>
+
+                <!-- Speaker Ring -->
+                <circle cx="220" cy="220" r="57" class="ring-grid speaker-ring" stroke-dasharray="1 3"></circle>
+              </svg>
+
+              <!-- Central Telemetry Status Display -->
+              <div class="reactor-center" role="status">
+                <span id="center-state-text">STANDBY</span>
+                <small id="center-substate-text">READY</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Telemetry Grid -->
+          <div class="telemetry">
+            <div class="telemetry-column">
+              <div class="metric">
+                <div class="technical-label">System status:</div>
+                <div class="metric-value">
+                  <span id="status-dot" class="status-dot unknown"></span>
+                  <span id="telemetry-status-text">UNKNOWN</span>
+                </div>
+              </div>
+              <div class="metric">
+                <div class="technical-label">Latency:</div>
+                <div class="metric-value" id="telemetry-latency">N/A</div>
+              </div>
+            </div>
+            <div class="telemetry-column">
+              <div class="metric">
+                <div class="technical-label">Voice engine:</div>
+                <div class="metric-value" id="telemetry-voice">UNKNOWN</div>
+              </div>
+              <div class="metric">
+                <div class="technical-label">Router:</div>
+                <div class="metric-value" id="telemetry-router">UNKNOWN</div>
+              </div>
+            </div>
+            <div class="telemetry-column">
+              <div class="metric">
+                <div class="technical-label">Memory:</div>
+                <div class="metric-value" id="telemetry-memory">N/A</div>
+              </div>
+              <div class="metric">
+                <div class="technical-label">Bridge:</div>
+                <div class="metric-value" id="telemetry-bridge">CONNECTING…</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Panel: Operational Workspace / Conversation -->
+        <section class="workspace-panel" aria-label="Command workspace">
+          <!-- Conversation Header with Title & Clear Chat Action -->
+          <header class="workspace-header">
+            <!-- Side-by-Side Squircle Mic & Speaker Controls -->
+            <div class="header-audio-controls" role="group" aria-label="Audio controls">
+              <!-- Mic Button (Squircle) -->
+              <button 
+                id="mic-btn" 
+                class="squircle-btn" 
+                type="button" 
+                aria-pressed="false"
+                title="Microphone input: Click to speak"
+                aria-label="Microphone input"
+              >
+                <div class="squircle-icon-wrap" id="mic-icon-box">
+                  <svg id="mic-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 19v3"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <rect x="9" y="2" width="6" height="13" rx="3"></rect>
+                  </svg>
+                </div>
+              </button>
+
+              <!-- Speaker Button (Squircle) -->
+              <button 
+                id="speaker-btn" 
+                class="squircle-btn active" 
+                type="button" 
+                aria-pressed="true"
+                title="Voice output speaker: Click to mute speech"
+                aria-label="Voice output speaker"
+              >
+                <div class="squircle-icon-wrap" id="speaker-icon-box">
+                  <svg id="speaker-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                  </svg>
+                </div>
+              </button>
+            </div>
+
+            <!-- Clear Chat Action Button -->
+            <button 
+              id="clear-chat-btn" 
+              class="clear-chat-button"
+              type="button" 
+              title="Clear conversation history"
+              aria-label="Clear chat"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+              <span>Clear chat</span>
+            </button>
+          </header>
+
+          <!-- Chat History Log -->
+          <div id="chat-scroll" class="chat-scroll" role="log" aria-live="polite">
+            <!-- Messages rendered dynamically -->
+          </div>
+
+          <!-- Command Composer Area with Shimmer Voice Transcription & Input -->
+          <footer class="composer-area">
+            <!-- User Speech Shimmer Transcription (Temporary, Auto-dispatches on finalize) -->
+            <div id="transcription-container" class="transcription-container" style="display: none;" aria-live="polite">
+              <div id="transcription-text" class="shimmer-text">
+                Listening for speech…
+              </div>
+            </div>
+
+            <!-- Message Composer Row -->
+            <form id="composer-form" class="composer-form-row">
+              <div class="command-field">
+                <input 
+                  id="command-input" 
+                  aria-label="Message" 
+                  placeholder="Message..." 
+                  autocomplete="off" 
+                  value=""
+                />
+              </div>
+              <button 
+                id="send-btn"
+                class="send-btn-action" 
+                type="submit" 
+                disabled
+                title="Send command"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                <span>Send</span>
+              </button>
+            </form>
+
+            <div id="voice-note" class="voice-note" style="display: none;">
+              Voice preview • Microphone idle
+            </div>
+
+            <div class="composer-footnote">
+              Autonomous local workspace • Voice recognition & speech synthesis enabled • Connected to FastAPI bridge
+            </div>
+          </footer>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# Python virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python byte-code and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Local environment configs and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Runtime generated audio, temp data, and test artifacts
+outputs/
+generated_audio/
+*.tmp
+*.wav_cache
+
+# Logs
+logs/
+*.log
+
+# SQLite database files and data directory
+data/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+
+# macOS filesystem metadata
+.DS_Store
+Thumbs.db
